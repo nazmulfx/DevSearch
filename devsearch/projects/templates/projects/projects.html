@@ -2,4 +2,32 @@
 
 {% block content %}
     <h1>Projects Template</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Project Name</th>
+            <th scope="col">Positive Vote</th>
+            <th scope="col">Votes</th>
+            <th scope="col">Created Time</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td>{{project.title}}</td>
+            <td>{{project.vote_ratio}}%</td>
+            <td>{{project.vote_total}}</td>
+            <td>{{project.created|timesince}}</td>
+            <td><a href="{% url 'update-project' project.id %}">Update</a></td>
+            <td><a href="{% url 'project' project.id %}">View</a></td>
+            <td><a href="{% url 'delete-project' project.id %}">Delete</a></td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+
 {% endblock content %}
