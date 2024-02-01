@@ -1,12 +1,72 @@
 {% extends "main.html" %}
 
 {% block content %}
-<h2>Project Form</h2>
 
-<form action="" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" value="Submit">
-</form>
+    <!-- Main Section -->
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
+                <br>
+                <!-- Django Way Design Form & customize it in forms.py-->
+                <form class="form" method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- Input:Text -->
+                    {% for field in form %}
+                    <div class="form__field">
+                        <label for="formInput#text">{{field.label}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                    
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                </form>
+
+                <!-- Manually Design Form-->
+                {% comment %} <form class="form" method="POST" action="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- Input:Title -->
+                    <div class="form__field">
+                        <label for="formInput#text">Title</label>
+                        <input class="input input--text" id="formInput#text" type="text" name="title"
+                            placeholder="Enter text" />
+                    </div>
+                    <!-- Input: Featured image -->
+                    <div class="form__field">
+                        <label for="formInput#text">Featured Image</label>
+                        <input class="input input--text" id="formInput#text" type="file" name="featured_image"
+                            placeholder="Enter text" />
+                    </div>
+                    <!-- Input: Description -->
+                    <div class="form__field">
+                        <label for="formInput#text">Description</label>
+                        <textarea class="input input--text" id="formInput#text" type="text" name="description"
+                            placeholder="Enter text"> </textarea>
+                    </div>
+                    <!-- Input: Demo Link -->
+                    <div class="form__field">
+                        <label for="formInput#text">Demo Link</label>
+                        <input class="input input--text" id="formInput#text" type="text" name="demo_link"
+                            placeholder="Demo Link" />
+                    </div>
+                    <!-- Input: Source Link -->
+                    <div class="form__field">
+                        <label for="formInput#text">Source Link</label>
+                        <input class="input input--text" id="formInput#text" type="text" name="source_link"
+                            placeholder="Source Link" />
+                    </div>
+                    <div class="form__field">
+                        <label for="formInput#text">Tags</label>
+                        {{form.tags}}
+                    </div>
+
+                    
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                </form> {% endcomment %}
+
+            </div>
+        </div>
+    </main>
+
 
 {% endblock content %}
