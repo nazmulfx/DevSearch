@@ -22,7 +22,7 @@ class Profile(models.Model):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     
     def __str__(self):
-        return str(self.user.username)  #just convert anytype of username to string
+        return str(self.username)  #just convert anytype of username to string
     
     
 class Skill(models.Model):

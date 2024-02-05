@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     'projects.apps.ProjectsConfig',
-    'user.apps.UserConfig'
+    'user.apps.UserConfig'              # Make sure configured apps like this way, otherwise apps config will not work
     
 ]
 
