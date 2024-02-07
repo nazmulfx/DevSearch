@@ -28,10 +28,28 @@
         {% include "navbar.html" %}
         <!--Navbar Start-->
 
+        {% comment %} {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endcomment %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert--{{message.tags}}">
+                <p class="alert__message">{{message}}</p>
+                <button class="alert__close">x</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
         <!--Content Start-->
         {% block content %}
         
         {% endblock content %}
         <!--Content end-->
+
+        <script href="{% static 'uikit/app.js' %}"></script>
     </body>
 </html>
