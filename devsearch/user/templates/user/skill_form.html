@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% if page == 'add' %}
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="#"><i style="font-size:36px" class="bi bi-arrow-left-short"></i></a>
+                <br>
+                <h3>Add new skill</h3>
+
+                <form class="form" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form__field">
+                        <label for="formInput#text">{{field.label}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                    
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+    </main>
+{% elif page == 'edit' %}
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="{% url 'account' %}"><i style="font-size:36px" class="bi bi-arrow-left-short"></i></a>
+                <br>
+                <h3>Update skill</h3>
+
+                <form class="form" method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form__field">
+                        <label for="formInput#text">{{field.label}}</label>
+                        {{field}}
+                    </div>
+                    {% endfor %}
+                    
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+                </form>
+            </div>
+        </div>
+    </main>
+{% endif %}
+
+{% endblock content %}
