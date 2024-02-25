@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from . models import Project
 from . forms import projectForm
@@ -13,10 +13,18 @@ from . utils import SearchProject
 def projects(request):
     projects, search_query = SearchProject(request)
     
-    page = 1
+    page = request.GET.get('page')                      # getting data from user like ?page=1
     projectPerPage = 3
     paginator = Paginator(projects, projectPerPage)
-    projects = paginator.page(page)
+    
+    try:                                                # if everything is good like url/?page=2
+        projects = paginator.page(page)                 
+    except PageNotAnInteger:                            # if page number not given like url/
+        page = 1
+        projects = paginator.page(page)
+    except EmptyPage:                                   # if user accidently goes wrong page number like url/?page=100000
+        page = paginator.num_pages
+        projects = paginator.page(page)
     
     context = {'projects':projects, 'search_query':search_query}
     return render(request, 'projects/projects.html', context)
