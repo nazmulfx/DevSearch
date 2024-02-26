@@ -1,6 +1,36 @@
 
 from django.db.models import Q
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Profile, Skill
+
+
+def paginateProfiles(request, profiles, objectPerPage):
+    
+    page = request.GET.get('page')                      # getting data from user like ?page=1
+    #objectPerPage = 3
+    paginator = Paginator(profiles, objectPerPage)
+    
+    try:                                                # if everything is good like url/?page=2
+        profiles = paginator.page(page)                 
+    except PageNotAnInteger:                            # if page number not given like url/
+        page = 3
+        profiles = paginator.page(page)
+    except EmptyPage:                                   # if user accidently goes wrong page number like url/?page=100000
+        page = paginator.num_pages
+        profiles = paginator.page(page)
+        
+    leftIndex = (int(page) - 4)
+    if leftIndex < 1:
+        leftIndex = 1
+        
+    rightIndex = (int(page) + 5)
+    if rightIndex > paginator.num_pages:
+        rightIndex = paginator.num_pages + 1
+    
+    custom_range = range(leftIndex, rightIndex)
+    
+    return custom_range, profiles
+
 
 def SearchProfiles(request):
     search_query = ''                                   # Default Search filter is ''= empty (we will search developer name)
