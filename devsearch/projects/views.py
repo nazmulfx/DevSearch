@@ -14,8 +14,8 @@ def projects(request):
     projects, search_query = SearchProject(request)
     
     page = request.GET.get('page')                      # getting data from user like ?page=1
-    projectPerPage = 3
-    paginator = Paginator(projects, projectPerPage)
+    objectPerPage = 3
+    paginator = Paginator(projects, objectPerPage)
     
     try:                                                # if everything is good like url/?page=2
         projects = paginator.page(page)                 
