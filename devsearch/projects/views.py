@@ -14,19 +14,30 @@ def projects(request):
     projects, search_query = SearchProject(request)
     
     page = request.GET.get('page')                      # getting data from user like ?page=1
-    objectPerPage = 6
+    objectPerPage = 1
     paginator = Paginator(projects, objectPerPage)
     
     try:                                                # if everything is good like url/?page=2
         projects = paginator.page(page)                 
     except PageNotAnInteger:                            # if page number not given like url/
-        page = 1
+        page = 3
         projects = paginator.page(page)
     except EmptyPage:                                   # if user accidently goes wrong page number like url/?page=100000
         page = paginator.num_pages
         projects = paginator.page(page)
+        
+    leftIndex = (int(page) - 4)
+    if leftIndex < 1:
+        leftIndex = 1
+        
+    rightIndex = (int(page) + 5)
+    if rightIndex > paginator.num_pages:
+        rightIndex = paginator.num_pages + 1
     
-    context = {'projects':projects, 'search_query':search_query, 'paginator':paginator}
+        
+    custom_range = range(leftIndex, rightIndex)
+    
+    context = {'projects':projects, 'search_query':search_query, 'paginator':paginator, 'custom_range':custom_range}
     return render(request, 'projects/projects.html', context)
 
 def Singleproject(request, pk):
