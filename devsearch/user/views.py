@@ -57,9 +57,9 @@ def registerUser(request):
 def profiles(request):
     profiles, search_query = SearchProfiles(request)
     
-    custom_range, profiles = paginateProfiles(request, profiles, 3)
+    paginator, profiles = paginateProfiles(request, profiles, 1)
     
-    context = {'profiles':profiles, 'search_query':search_query, 'custom_range':custom_range}
+    context = {'profiles':profiles, 'search_query':search_query, 'paginator':paginator}
     return render(request, 'user/profiles.html', context)
 
 

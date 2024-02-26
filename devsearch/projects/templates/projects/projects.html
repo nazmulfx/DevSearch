@@ -59,7 +59,7 @@
       </div>
     </section>
 
-    {% include 'paginator.html' with queryset=projects custom_range=custom_range %}
+    {% include 'paginator.html' with queryset=projects paginator=paginator%}
 
   </main>
 

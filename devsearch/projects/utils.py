@@ -5,31 +5,13 @@ from . models import Project, Tag
 
 
 def paginateProjects(request, projects, objectPerPage):
-    
-    page = request.GET.get('page')                      # getting data from user like ?page=1
-    #objectPerPage = 3
+
+    #### Paginator Setup in My Way ####
+    page = request.GET.get('page')
     paginator = Paginator(projects, objectPerPage)
+    projects = paginator.get_page(page)
     
-    try:                                                # if everything is good like url/?page=2
-        projects = paginator.page(page)                 
-    except PageNotAnInteger:                            # if page number not given like url/
-        page = 3
-        projects = paginator.page(page)
-    except EmptyPage:                                   # if user accidently goes wrong page number like url/?page=100000
-        page = paginator.num_pages
-        projects = paginator.page(page)
-        
-    leftIndex = (int(page) - 4)
-    if leftIndex < 1:
-        leftIndex = 1
-        
-    rightIndex = (int(page) + 5)
-    if rightIndex > paginator.num_pages:
-        rightIndex = paginator.num_pages + 1
-    
-    custom_range = range(leftIndex, rightIndex)
-    
-    return custom_range, projects
+    return paginator, projects
 
 
 def SearchProject(request):
