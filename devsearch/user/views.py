@@ -23,7 +23,13 @@ def loginUser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')    # if url have 'next' GET request, after login redirect to 'next=URL' otherwise redirect user to their account page
+            # return redirect(
+            #     if 'next' in request.GET:
+            #         request.GET['next']
+            #     else:
+            #         'account'   
+            # )
         else:
             messages.error(request, 'Username or Password is incorrect')
     context = {'page': page}
@@ -57,7 +63,7 @@ def registerUser(request):
 def profiles(request):
     profiles, search_query = SearchProfiles(request)
     
-    paginator, profiles = paginateProfiles(request, profiles, 1)
+    paginator, profiles = paginateProfiles(request, profiles, 6)
     
     context = {'profiles':profiles, 'search_query':search_query, 'paginator':paginator}
     return render(request, 'user/profiles.html', context)

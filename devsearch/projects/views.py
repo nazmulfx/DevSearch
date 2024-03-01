@@ -5,21 +5,40 @@ from django.contrib import messages
 from django.db.models import Q
 
 from . models import Project
-from . forms import projectForm
+from . forms import projectForm, ReviewForm
 from . utils import SearchProject, paginateProjects
 
 # Create your views here.
 def projects(request):
     projects, search_query = SearchProject(request)
     
-    paginator, projects = paginateProjects(request, projects, 1)
+    paginator, projects = paginateProjects(request, projects, 6)
 
     context = {'projects':projects, 'search_query':search_query, 'paginator':paginator}
     return render(request, 'projects/projects.html', context)
 
 def Singleproject(request, pk):
     project = Project.objects.get(id=pk)
-    context = {'project':project}
+    
+    print('Reviewers list: ', project.reviewers)
+    
+    form = ReviewForm()
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.project = project
+            review.owner = request.user.profile
+            review.save()
+            
+            project.getVoteCount
+            
+            messages.success(request, 'Your review successfully submitted!')
+            return redirect('project', pk=project.id)
+            
+    # Note: Need to make a signal to update vote count when delete review
+    
+    context = {'project':project, 'form':form}
     return render(request, 'projects/single-project.html', context)
 
 @login_required(login_url="login")
