@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Q
 from . models import Profile
-from . forms import UserForm, ProfileForm, SkillForm
+from . forms import UserForm, ProfileForm, SkillForm, MessageForm
 from . utils import SearchProfiles, paginateProfiles
 
 # Create your views here.
@@ -144,3 +144,50 @@ def deleteSkill(request, pk):
         return redirect('account')
     context = {'obj': skill}
     return render(request, 'projects/delete_objects.html', context)
+
+
+@login_required(login_url='login')
+def inbox(request):
+    profile = request.user.profile
+    messages_request = profile.message_recipient.all()                # querying child model by related name from Message model 'ForeignKey'
+    unread_messages = messages_request.filter(is_read=False).count()  # counting unread messages
+    context = {'messages_request':messages_request, 'unread_messages':unread_messages}
+    return render(request, 'user/inbox.html', context)
+
+@login_required(login_url='login')
+def viewMessage(request, pk):
+    profile = request.user.profile                  # step-1: querying loged in user profile (just limiting that only logged in user can query his own messages)
+    message = profile.message_recipient.get(id=pk)  # step-2: querying profile>message_recipient by the Message Model id
+    
+    if message.is_read == False:                    # step-: only it will call when it unread
+        message.is_read = True                     # step-1: if user read the message is_read = True then save
+        message.save()
+        
+    context = {'message':message}
+    return render(request, 'user/message.html', context)
+
+
+def createMessage(request, pk):
+    recipient = Profile.objects.get(id=pk)          # getting recipient id by url from recipient profile
+    form = MessageForm()
+    
+    try:                                            # try catch: to check if the user is loged in or not
+        sender = request.user.profile               # getting sender id from request object
+    except:
+        sender = None                               # if anonymous then sender is none (extra 3 field add ['name', 'email', ''])
+        
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+            messages.success(request, 'Your message was successfully sent.')
+            return redirect('user-profile', pk=recipient.id)
+    
+    context = {'recipient': recipient, 'form':form}
+    return render(request, 'user/message_form.html', context)
