@@ -122,6 +122,19 @@ USE_I18N = True
 USE_TZ = True
 
 
+
+### Django Email Config ### start
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'premium260.web-hosting.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'admin@nhdfx.com'
+EMAIL_HOST_PASSWORD = 'N11153118n'  # signal created on user => signals
+
+### Django Email config ### end
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
