@@ -132,6 +132,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'admin@nhdfx.com'
 EMAIL_HOST_PASSWORD = 'N11153118n'  # signal created on user => signals
 
+
 ### Django Email config ### end
 
 
